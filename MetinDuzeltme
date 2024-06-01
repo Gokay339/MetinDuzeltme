@@ -1,0 +1,31 @@
+import language_tool_python
+
+def otomatik_düzeltme(metin):
+    tool = language_tool_python.LanguageTool('en')  # İngilizce dilini seçiyoruz
+    düzeltmeler = tool.check(metin)
+
+    düzeltmeler_metin = metin
+    for düzeltme in düzeltmeler:
+        başlangıç = düzeltme.offset
+        bitiş = başlangıç + düzeltme.errorLength
+        öneri = düzeltme.replacements[0] if düzeltme.replacements else ""
+        düzeltmeler_metin = düzeltmeler_metin[:başlangıç] + öneri + düzeltmeler_metin[bitiş:]
+
+    return düzeltmeler_metin
+
+# Kullanıcıdan girdi alma
+metin = input("Düzeltmek istediğiniz metni girin: ")
+# Düzeltme fonksiyonunu kullanma
+düzeltilmiş_metin = otomatik_düzeltme(metin)
+# Düzeltmelerin çıktısını gösterme
+print("Düzeltilmiş metin: ", düzeltilmiş_metin)
+
+
+# ÖRNEK METİN BOZUK HALİ
+# METİNLER İNGİLİZCE KABUL EDİLİYOR SANIRIM TÜRKÇE DESTEĞİ YOK
+# This is a exmple of a sentence with some erors. The quik brown fox jumps over the lazi dog. They doesnt know what they are doing. She go to the store yesturday.
+
+
+# DÜZELTİLMİŞ HALİ
+# This is an example of a sentence with some errors. The quick brown fox jumps over the lazy dog. They don't know what they are doing. She went to the store yesterday.
+
